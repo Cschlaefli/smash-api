@@ -67,7 +67,7 @@ namespace SmashApi.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/Identity/Account/");
+            returnUrl = returnUrl ?? Url.Content("~/Identity/Account/Manage");
 
             if (ModelState.IsValid)
             {
