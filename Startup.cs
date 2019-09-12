@@ -34,7 +34,14 @@ namespace SmashApi
                 opt.UseMySql(Configuration.GetConnectionString("connectionString"))
                 );
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<CharacterContext>();
+                .AddEntityFrameworkStores<CharacterContext>()
+                .AddDefaultTokenProviders();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(c =>
             {
@@ -43,7 +50,7 @@ namespace SmashApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -60,7 +67,43 @@ namespace SmashApi
                 c.SwaggerEndpoint("v1/swagger.json", "Smash API V1");
             });
 
+            app.UseAuthentication();
+            app.UseStaticFiles();
             app.UseMvc();
+
+            CreateRoles(serviceProvider).Wait();
+        }
+
+private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+
+            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+
+            //adding custom roles
+
+            var RoleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+
+            var UserManager = serviceScope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+
+            string[] roleNames = {"Admin"};
+
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                //creating the roles and seeding them to the database
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+
+                if (!roleExist)
+                {
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+
+            }
         }
     }
+
 }
