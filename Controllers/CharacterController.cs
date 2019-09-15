@@ -18,6 +18,7 @@ namespace SmashApi.Controllers
         public CharacterController(CharacterContext context){
             _context = context;
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
