@@ -57,6 +57,7 @@ namespace SmashApi
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -87,6 +88,7 @@ namespace SmashApi
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseMvc();
+            app.UseCors(x => x.AllowAnyOrigin().WithMethods("GET").AllowAnyHeader());
 
             CreateRoles(serviceProvider).Wait();
         }
