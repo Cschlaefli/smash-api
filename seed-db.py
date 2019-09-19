@@ -16,14 +16,6 @@ def to_camel_case(snake_str):
     components = snake_str.split('_')
     return  ''.join(x.title() for x in components)
 
-def convert(name):
-    names = {
-        "startup" : "StartUp"
-    }
-    if name in names :
-        return names[name]
-    return name.title()
-
 for info in characters:
     num += 1
     char_post = {}
@@ -34,12 +26,12 @@ for info in characters:
         elif k == "stats" :
             for key, value in v.items() :
                 if value != "**" :
-                    char_post[key] = value
+                    char_post[to_camel_case(key)] = value
         else :
             move = {}
             move["Name"] = k
             for key, value in v.items() :
-                if value : move[key] = convert(value)
+                if value : move[key] = value
             char_post['Moves'].append(move)
     response = requests.post("http://localhost:5000/api/character", json=char_post, headers={'Authorization': 'Bearer '+ jwt})
     print(response.headers)

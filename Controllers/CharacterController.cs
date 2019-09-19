@@ -41,7 +41,7 @@ namespace SmashApi.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCharacter), new {id = character.Id}, character);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCharacter(int id, Character character)
         {
@@ -53,7 +53,7 @@ namespace SmashApi.Controllers
 
             return NoContent();
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacter(int id)
         {
