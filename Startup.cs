@@ -38,17 +38,22 @@ namespace SmashApi
                 opt.UseMySql(Configuration.GetConnectionString("connectionString"))
                 );
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<CharacterContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<CharacterContext>();
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = $"/Identity/Account/Login";
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication( options =>
+                {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                }
+                )
                 .AddJwtBearer(options =>
                 {
+                    options.IncludeErrorDetails = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -64,6 +69,15 @@ namespace SmashApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Smash API", Version = "v1"});
+            });
+            services.Configure<IdentityOptions>(options =>
+            {
+                //options.SignIn.RequireConfirmedEmail = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
             });
         }
 
@@ -84,11 +98,14 @@ namespace SmashApi
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Smash API V1");
             });
-
+            app.UseCors(x => 
+                x.WithOrigins("http://localhost:4200").
+                AllowAnyHeader().
+                AllowAnyMethod().
+                AllowCredentials());
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseMvc();
-            app.UseCors(x => x.AllowAnyOrigin().WithMethods("GET").AllowAnyHeader());
 
             CreateRoles(serviceProvider).Wait();
         }

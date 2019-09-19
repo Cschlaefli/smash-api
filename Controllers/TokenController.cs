@@ -18,7 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace SmashApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class TokenController : Controller
     {
         private IConfiguration _config;
@@ -34,6 +34,7 @@ namespace SmashApi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> CreateToken([FromBody]LoginModel login)
         {
             IActionResult response = Unauthorized();

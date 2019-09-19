@@ -1,3 +1,4 @@
 bin/
 obj/
 *.key*
+*ove*.json
