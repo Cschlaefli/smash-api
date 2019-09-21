@@ -22,7 +22,7 @@ namespace SmashApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
-            return await _context.Characters.ToListAsync();
+            return await _context.Characters.Include(ch => ch.Moves).ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Character>> GetCharacter(int id)
