@@ -55,6 +55,48 @@ namespace SmashApi.Controllers
 
             return response;
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> CreateUser([FromBody]LoginModel login)
+        {
+            IActionResult response = BadRequest();
+            var user = new IdentityUser { UserName = login.Username, Email = login.Username };
+            var result = await _userManager.CreateAsync(user, login.Password);
+            if (result.Succeeded){
+                response = Ok("{login.Username} registered");
+            }
+            return response;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("roles")]
+        public async Task<IActionResult> AddRole([FromBody]string code)
+        {
+            var email = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            IActionResult response = BadRequest();
+            if(user == null)
+                return BadRequest();
+
+            string role = _config.GetSection("RoleCodes").GetValue<String>(code.ToLower(), "");
+            if(!String.IsNullOrEmpty(role) && user != null)
+            {
+                var changeRoleResult = await _userManager.AddToRoleAsync(user, role);
+                if( changeRoleResult.Succeeded ){
+                    response = Ok(new {token = user+role});
+                }
+                else
+                {
+                    response = Ok(new {token = changeRoleResult.Errors });
+                }
+            }
+            return response;
+
+        }
+
         private string BuildToken(Claim[] claim)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -68,10 +110,16 @@ namespace SmashApi.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        
         public class LoginModel
         {
             public string Username { get; set; }
             public string Password { get; set; }
+        }
+        public class SetRoleLoginModel : LoginModel
+        {
+            public string Code { get; set;}
         }
 
 
