@@ -70,7 +70,7 @@ namespace SmashApi.Controllers
             return response;
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost]
         [Route("roles")]
         public async Task<IActionResult> AddRole([FromBody]RoleLoginModel login)
