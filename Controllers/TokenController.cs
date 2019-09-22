@@ -70,27 +70,33 @@ namespace SmashApi.Controllers
             return response;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost]
         [Route("roles")]
-        public async Task<IActionResult> AddRole([FromBody]string code)
+        public async Task<IActionResult> AddRole([FromBody]RoleLoginModel login)
         {
-            var email = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByEmailAsync(email);
-            IActionResult response = BadRequest();
-            if(user == null)
-                return BadRequest();
 
-            string role = _config.GetSection("RoleCodes").GetValue<String>(code.ToLower(), "");
-            if(!String.IsNullOrEmpty(role) && user != null)
+            var result = await _signInManager.PasswordSignInAsync(login.Username, login.Password, false, lockoutOnFailure: true);
+            string role = _config.GetSection("RoleCodes").GetValue<String>(login.Code.ToLower(), "");
+            IActionResult response = Unauthorized("Invalid login");
+
+            if (result.Succeeded)
             {
-                var changeRoleResult = await _userManager.AddToRoleAsync(user, role);
-                if( changeRoleResult.Succeeded ){
-                    response = Ok(new {token = user+role});
+                var user = await _userManager.FindByEmailAsync(login.Username);
+                if(!String.IsNullOrEmpty(role))
+                {
+                    var changeRoleResult = await _userManager.AddToRoleAsync(user, role);
+                    if( changeRoleResult.Succeeded ){
+                        response = Ok(" user {test} is now {role}");
+                    }
+                    else
+                    {
+                        response = BadRequest(changeRoleResult.Errors);
+                    }
                 }
                 else
                 {
-                    response = Ok(new {token = changeRoleResult.Errors });
+                    response = BadRequest("Invalide code");
                 }
             }
             return response;
@@ -117,7 +123,7 @@ namespace SmashApi.Controllers
             public string Username { get; set; }
             public string Password { get; set; }
         }
-        public class SetRoleLoginModel : LoginModel
+        public class RoleLoginModel : LoginModel
         {
             public string Code { get; set;}
         }
