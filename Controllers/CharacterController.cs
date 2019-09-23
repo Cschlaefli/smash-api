@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SmashApi.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace SmashApi.Controllers
 {
@@ -20,11 +21,13 @@ namespace SmashApi.Controllers
         }
 
         [HttpGet]
+        [EnableCors("Permissive")]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
             return await _context.Characters.Include(ch => ch.Moves).ToListAsync();
         }
         [HttpGet("{id}")]
+        [EnableCors("Permissive")]
         public async Task<ActionResult<Character>> GetCharacter(int id)
         {
             var character = await _context.Characters.FindAsync(id);
@@ -35,6 +38,7 @@ namespace SmashApi.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
+        [EnableCors("Enforcing")]
         public async Task<ActionResult<Character>> PostCharacter(Character character)
         {
             _context.Characters.Add(character);
@@ -43,6 +47,7 @@ namespace SmashApi.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
+        [EnableCors("Enforcing")]
         public async Task<IActionResult> PutCharacter(int id, Character character)
         {
             if(id != character.Id)
@@ -55,6 +60,7 @@ namespace SmashApi.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
+        [EnableCors("Enforcing")]
         public async Task<IActionResult> DeleteCharacter(int id)
         {
 

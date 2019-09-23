@@ -34,6 +34,23 @@ namespace SmashApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o =>
+            {
+                o.AddPolicy("Permissive", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+                o.AddPolicy("Enforcing", builder =>
+                {
+                    builder.WithOrigins("https://cade.schlaefl.dev")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();             
+                });
+            }
+            );
             services.AddDbContext<CharacterContext>(opt =>
                 opt.UseMySql(Configuration.GetConnectionString("connectionString"))
                 );
@@ -79,6 +96,7 @@ namespace SmashApi
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,11 +116,6 @@ namespace SmashApi
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Smash API V1");
             });
-            app.UseCors(x => 
-                x.WithOrigins("http://localhost:4200").
-                AllowAnyHeader().
-                AllowAnyMethod().
-                AllowCredentials());
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseMvc();

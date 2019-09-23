@@ -13,12 +13,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.AspNetCore.Cors;
 
 
 namespace SmashApi.Controllers
 {
     [Route("api/auth")]
+    [EnableCors("Enforcing")]
     public class TokenController : Controller
     {
         private IConfiguration _config;
