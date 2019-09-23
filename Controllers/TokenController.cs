@@ -61,11 +61,11 @@ namespace SmashApi.Controllers
         [Route("register")]
         public async Task<IActionResult> CreateUser([FromBody]LoginModel login)
         {
-            IActionResult response = BadRequest();
             var user = new IdentityUser { UserName = login.Username, Email = login.Username };
             var result = await _userManager.CreateAsync(user, login.Password);
+            IActionResult response = BadRequest(result.Errors);
             if (result.Succeeded){
-                response = Ok("{login.Username} registered");
+                response = Ok($"{login.Username} registered");
             }
             return response;
         }
@@ -87,7 +87,7 @@ namespace SmashApi.Controllers
                 {
                     var changeRoleResult = await _userManager.AddToRoleAsync(user, role);
                     if( changeRoleResult.Succeeded ){
-                        response = Ok(" user {test} is now {role}");
+                        response = Ok($" user {user.Email} is now {role}");
                     }
                     else
                     {
