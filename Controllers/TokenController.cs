@@ -78,7 +78,7 @@ namespace SmashApi.Controllers
         {
 
             var result = await _signInManager.PasswordSignInAsync(login.Username, login.Password, false, lockoutOnFailure: true);
-            string role = _config.GetSection("RoleCodes").GetValue<String>(login.Code.ToLower(), "");
+            string role = _config["adminCode"].ToLower() == login.Code.ToLower() ?  "Admin" : "";
             IActionResult response = Unauthorized("Invalid login");
 
             if (result.Succeeded)

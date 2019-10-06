@@ -24,15 +24,21 @@ namespace SmashApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables("APP_");
+                Configuration = builder.Build();
+            
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services) 
         {
             services.AddCors(o =>
             {
@@ -52,7 +58,7 @@ namespace SmashApi
             }
             );
             services.AddDbContext<CharacterContext>(opt =>
-                opt.UseMySql(Configuration.GetConnectionString("connectionString"))
+                opt.UseMySql(Configuration["connectionString"])
                 );
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<CharacterContext>();
