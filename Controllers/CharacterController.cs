@@ -24,7 +24,7 @@ namespace SmashApi.Controllers
         [EnableCors("Permissive")]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
-            return await _context.Characters.Include(ch => ch.Moves).ToListAsync();
+            return await _context.Characters.ToListAsync();
         }
         [HttpGet("{id}")]
         [EnableCors("Permissive")]
