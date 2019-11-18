@@ -16,6 +16,7 @@ namespace SmashApi.Models
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Move> Moves { get; set; }
+        public DbSet<Version> Versions {get; set;}
         public DbSet<Character> Characters {get; set;}
     }
 }

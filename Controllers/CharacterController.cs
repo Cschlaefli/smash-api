@@ -33,7 +33,14 @@ namespace SmashApi.Controllers
             var character = await _context.Characters.FindAsync(id);
             if(character == null)
                 return NotFound();
-            await _context.Entry(character).Collection(c => c.Moves).LoadAsync();            
+            await _context.Entry(character)
+                .Collection(c => c.Moves)
+                .LoadAsync();
+            foreach (Move m in character.Moves){
+                await _context.Entry(m)
+                    .Collection(c => c.Versions)
+                    .LoadAsync();
+            }
             return character;
         }
         [Authorize(Roles = "Admin")]

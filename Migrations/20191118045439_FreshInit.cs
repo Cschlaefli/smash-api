@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmashApi.Migrations
 {
-    public partial class defaultIdentity : Migration
+    public partial class FreshInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,52 @@ namespace SmashApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Characters",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Jumps = table.Column<int>(nullable: false),
+                    Crawl = table.Column<bool>(nullable: false),
+                    WallJump = table.Column<bool>(nullable: false),
+                    WallCling = table.Column<bool>(nullable: false),
+                    Zair = table.Column<bool>(nullable: false),
+                    SoftLanding = table.Column<int>(nullable: false),
+                    HardLanding = table.Column<int>(nullable: false),
+                    InitialDashFrames = table.Column<int>(nullable: false),
+                    FullDashFrames = table.Column<int>(nullable: false),
+                    ShortHop = table.Column<string>(nullable: true),
+                    FullHop = table.Column<string>(nullable: true),
+                    ShortHopFastFall = table.Column<string>(nullable: true),
+                    FullHopFastFall = table.Column<string>(nullable: true),
+                    Weight = table.Column<int>(nullable: false),
+                    WalkSpeed = table.Column<float>(nullable: false),
+                    Gravity = table.Column<float>(nullable: false),
+                    RunSpeed = table.Column<float>(nullable: false),
+                    InitialDash = table.Column<float>(nullable: false),
+                    Acceleration = table.Column<float>(nullable: false),
+                    Friction = table.Column<float>(nullable: false),
+                    AirSpeed = table.Column<float>(nullable: false),
+                    FastFallSpeed = table.Column<float>(nullable: false),
+                    AirAcceleration = table.Column<float>(nullable: false),
+                    AirFriction = table.Column<float>(nullable: false),
+                    FallSpeed = table.Column<float>(nullable: false),
+                    FastFall = table.Column<float>(nullable: false),
+                    ShieldGrab = table.Column<int>(nullable: false),
+                    FullHopInitialSpeed = table.Column<float>(nullable: false),
+                    FullHopHeight = table.Column<float>(nullable: false),
+                    ShortHopHeight = table.Column<float>(nullable: false),
+                    DoubleJumpHeight = table.Column<float>(nullable: false),
+                    ShieldDrop = table.Column<int>(nullable: false),
+                    JumpSquat = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Characters", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,8 +139,8 @@ namespace SmashApi.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -138,8 +184,8 @@ namespace SmashApi.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -149,6 +195,54 @@ namespace SmashApi.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Moves",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CharacterId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    NameJp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Moves", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Moves_Characters_CharacterId",
+                        column: x => x.CharacterId,
+                        principalTable: "Characters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Versions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    MoveId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Active = table.Column<string>(nullable: true),
+                    Duration = table.Column<string>(nullable: true),
+                    BaseDamage = table.Column<float>(nullable: false),
+                    ShieldStun = table.Column<string>(nullable: true),
+                    LandingLag = table.Column<string>(nullable: true),
+                    LandingLagFrames = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Versions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Versions_Moves_MoveId",
+                        column: x => x.MoveId,
+                        principalTable: "Moves",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -189,6 +283,22 @@ namespace SmashApi.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characters_Name",
+                table: "Characters",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Moves_CharacterId",
+                table: "Moves",
+                column: "CharacterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Versions_MoveId",
+                table: "Versions",
+                column: "MoveId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -209,10 +319,19 @@ namespace SmashApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Versions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Moves");
+
+            migrationBuilder.DropTable(
+                name: "Characters");
         }
     }
 }
