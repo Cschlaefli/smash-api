@@ -16,6 +16,8 @@ def to_camel_case(snake_str):
     components = snake_str.split('_')
     return  ''.join(x.title() for x in components)
 
+url = "http://localhost:5500"
+
 for info in characters:
     num += 1
     char_post = {}
@@ -33,9 +35,10 @@ for info in characters:
             for key, value in v.items() :
                 if value : move[key] = value
             char_post['Moves'].append(move)
-    response = requests.post("http://localhost:5000/api/character", json=char_post, headers={'Authorization': 'Bearer '+ jwt})
+    print(char_post)
+    response = requests.post(url +"/api/character", json=char_post, headers={'Authorization': 'Bearer '+ jwt})
     print(response.headers)
     print(response.text)
     if not response.ok :
-        break;
+        break
 

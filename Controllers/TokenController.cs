@@ -106,11 +106,11 @@ namespace SmashApi.Controllers
 
         private string BuildToken(Claim[] claim)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],                
+            var token = new JwtSecurityToken(_config["JwtIssuer"],
+                _config["JwtIssuer"],                
                 claim,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
