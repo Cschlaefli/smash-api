@@ -65,6 +65,35 @@ type_map = {
     "地上" : "Ground",
     "空中": "Air",
 }
+grab_map = {
+    "ふりむき" : "Pivot",
+    "ダッシュ" : "Dash",
+    "その場" : "Standing"
+}
+grab = "つかみ"
+pummel = "つかみ攻撃"
+
+throw_map = {
+    "前投げ" : "Forward Throw",
+    "後投げ" : "Back Throw",
+    "上投げ" : "Up Throw",
+    "下投げ" : "Down Throw"
+}
+throw_versions_map = {
+    "打撃" : "Hits",
+    "投げ" : "Throw"
+}
+dodge_map = {
+    "地上回避" : "Ground",
+    "空中回避" : "Air"
+}
+dodge_version_map = {
+    "その場" : "Spot Dodge",
+    "前方" : "Forward Roll",
+    "後方" : "Back Roll",
+    "通常" : "Neutral Air Dodge",
+    "移動" : "Directional Air Dodge"
+}
 
 for name_jp, v in chars.items() :
     page = wb.sheet_by_name(v["sheet"])
@@ -72,6 +101,8 @@ for name_jp, v in chars.items() :
     air_start = 0
     special_start = 0
     grab_start = 0
+    dodge_start = 0
+    misc_start = 0
     for x in range(page.nrows-1) :
         name = page.cell_value(x,0)
         if name == "地上攻撃" :
@@ -82,6 +113,10 @@ for name_jp, v in chars.items() :
             special_start = x
         if name == "つかみ・投げ" :
             grab_start = x
+        if name == "回避" :
+            dodge_start = x
+        if name == "共通動作 (崖・受け身...)" :
+            misc_start = x
     #parsing grounds and arials
     moves = {}
     for x in range(ground_start, special_start):
@@ -99,14 +134,16 @@ for name_jp, v in chars.items() :
         version["Name"] = page.cell_value(x,1)
         version["Active"] = page.cell_value(x,2)
         version["Duration"] = page.cell_value(x,3)
-        version["Base Damage"] = page.cell_value(x,4)
+        version["BaseDamage"] = page.cell_value(x,4)
         if x < air_start :
-            version["Shield Stun"] = page.cell_value(x,6)
+            current_move["type"] = "ground"
+            version["ShieldStun"] = page.cell_value(x,6)
             version["Comment"] = page.cell_value(x,7)
         elif x < special_start :
-            version["Shield Stun"] = page.cell_value(x,7)
-            version["Landing Lag"] = page.cell_value(x,8)
-            version["Landing Lag Frames"] = page.cell_value(x, 9)
+            current_move["type"] = "air"
+            version["ShieldStun"] = page.cell_value(x,7)
+            version["LandingLag"] = page.cell_value(x,8)
+            version["LandingLagFrames"] = page.cell_value(x, 9)
             version["Comment"] = page.cell_value(x, 10)
         current_move["versions"].append(version)
     name = ''
@@ -120,6 +157,7 @@ for name_jp, v in chars.items() :
                 name = special_map[key]
                 versions = []
                 moves[name] = {}
+                moves[name]["type"] = "special"
                 moves[name]["versions"] = versions
                 moves[name]["specialName"] = val[val.find("(")+1:val.find(")")]
                 moves[name]["name"] = name
@@ -132,9 +170,64 @@ for name_jp, v in chars.items() :
             #version["Name"] = version_name
             version["Active"] = page.cell_value(x, 2)
             version["Duration"] = page.cell_value(x,3)
-            version["Base Damage"] = page.cell_value(x,4)
-            version["Shield Stun"] = page.cell_value(x,6)
+            version["BaseDamage"] = page.cell_value(x,4)
+            version["ShieldStun"] = page.cell_value(x,6)
             version["Comment"] = page.cell_value(x,7)
+    moves["grabs"] = { "name" : "grabs", "type" : "grab", "versions": []}
+    for x in range(grab_start, dodge_start) :
+        val = page.cell_value(x,0)
+        if val == grab :
+            version = {}
+            version["name"] = grab_map[page.cell_value(x,1)]
+            version["active"] = page.cell_value(x,2)
+            version["duration"] = page.cell_value(x,3)
+            curr = moves["grabs"]["versions"].append(version)
+        if val == pummel :
+            version = {}
+            version["name"] = "pummel"
+            version["active"] = page.cell_value(x,2)
+            version["duration"] = page.cell_value(x,3)
+            version["BaseDamage"] = page.cell_value(x,4)
+            curr = moves["grabs"]["versions"].append(version)
+        if val in throw_map.keys() :
+            name = throw_map[val]
+            if not name in moves.keys() :
+                move = {}
+                moves[name] = move
+                move["name"] = name
+                move["versions"] = []
+                move["type"] = "throw"
+            curr = moves[name]
+            version = {}
+            v_name = page.cell_value(x,1)
+            if v_name in throw_versions_map.keys() : v_name = throw_versions_map[v_name]            
+            version["name"] = v_name
+            version["weightDependent"] = page.cell_value(x,2)
+            version["active"] = page.cell_value(x,3)
+            version["duration"] = page.cell_value(x,4)
+            version["baseDamage"] = page.cell_value(x,5)
+            version["comment"] = page.cell_value(x,7)
+            #maybe check if there are active frames here
+            if version["active"] != "" :
+                curr["versions"].append(version)
+    moves["dodges"] = { "name" : "dodges", "type" : "dodge", "versions": []}
+    for x in range(dodge_start, misc_start) :
+        val = page.cell_value(x, 0)
+        if val in dodge_map :
+            version = {}
+            version["name"] = dodge_version_map[page.cell_value(x,1)]
+            version["invincible"] = page.cell_value(x,2)
+            version["invincibleMaxPenalty"] = page.cell_value(x,3)
+            version["duration"] = page.cell_value(x,4)
+            if val == "地上回避" :
+                version["durationMaxPenalty"] = page.cell_value(x,5)
+            moves["dodges"]["versions"].append(version)
+
+
+
+
+            
+
 
     v["moves"] = moves
     for key, move in moves.items() :

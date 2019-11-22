@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmashApi.Models;
 
 namespace SmashApi.Migrations
 {
     [DbContext(typeof(CharacterContext))]
-    partial class CharacterContextModelSnapshot : ModelSnapshot
+    [Migration("20191119021402_dodge-roll-field")]
+    partial class dodgerollfield
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -343,9 +345,6 @@ namespace SmashApi.Migrations
                     b.Property<string>("SpecialName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CharacterId");
@@ -362,8 +361,8 @@ namespace SmashApi.Migrations
                     b.Property<string>("Active")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("BaseDamage")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<float>("BaseDamage")
+                        .HasColumnType("float");
 
                     b.Property<string>("Comment")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");

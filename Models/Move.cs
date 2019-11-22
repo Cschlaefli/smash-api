@@ -9,6 +9,7 @@ namespace SmashApi.Models
         public string Name {get; set;}
         public string NameJp {get;set;}
         public string SpecialName {get; set;}
+        public string Type {get; set;}
         public List<Version> Versions {get;set;}
     }
 
@@ -18,10 +19,13 @@ namespace SmashApi.Models
         public string Name {get; set;}
         public string Active {get;set;}
         public string Duration {get; set;}
-        public float BaseDamage {get; set;}
+        public string BaseDamage {get; set;}
         public string ShieldStun {get; set;}
         public string LandingLag {get; set;}
         public string LandingLagFrames {get; set;}
+        public string Intangible {get; set;}
+        public string IntangibleMaxPenalty {get; set;}
+        public string DurationMaxPenalty {get; set;}
         public string Comment {get;set;}        
     }
 }

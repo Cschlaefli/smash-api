@@ -42,6 +42,12 @@ namespace SmashApi
         {
             services.AddCors(o =>
             {
+                o.AddDefaultPolicy( builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
                 o.AddPolicy("Permissive", builder =>
                 {
                     builder.AllowAnyOrigin()

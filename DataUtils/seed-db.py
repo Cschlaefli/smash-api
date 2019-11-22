@@ -16,7 +16,7 @@ def to_camel_case(snake_str):
     components = snake_str.split('_')
     return  ''.join(x.title() for x in components)
 
-url = "http://localhost:5000"
+url = "http://localhost:5500"
 
 for info in characters.values():
     moves = info["moves"]

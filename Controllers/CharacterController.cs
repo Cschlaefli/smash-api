@@ -21,13 +21,13 @@ namespace SmashApi.Controllers
         }
 
         [HttpGet]
-        [EnableCors("Permissive")]
+        [EnableCors]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
             return await _context.Characters.ToListAsync();
         }
         [HttpGet("{id}")]
-        [EnableCors("Permissive")]
+        [EnableCors]
         public async Task<ActionResult<Character>> GetCharacter(int id)
         {
             var character = await _context.Characters.FindAsync(id);

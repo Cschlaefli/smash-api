@@ -33,12 +33,12 @@ namespace SmashApi.Models
         public float AirFriction {get; set;}
         public float FallSpeed {get; set;}
         public float FastFall {get; set;}
-        public int ShieldGrab {get; set;}
         public float FullHopInitialSpeed {get;set;}
         public float FullHopHeight {get;set;}
         public float ShortHopHeight {get;set;}
         public float DoubleJumpHeight {get;set;}
         public int ShieldDrop {get; set;}
+        public int ShieldGrab {get; set;}
         public int JumpSquat {get; set;}
     }
 }

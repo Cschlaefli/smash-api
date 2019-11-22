@@ -30,6 +30,7 @@ services:
     ports:
     - "5500:80"
     - "5501:443"
+    - "3306:3306"
     volumes:
       - /home/cslaf/.aspnet/https:/root/.aspnet/https/
     networks: 

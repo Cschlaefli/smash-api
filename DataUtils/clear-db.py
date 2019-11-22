@@ -7,10 +7,10 @@ with open("jwt.key", 'r') as f :
     key = json.loads(f.read())
 jwt = key["token"]
 
-for x in range(348, 999) :
-    response = requests.delete("http://localhost:5000/api/character/"+str(x),headers={'Authorization': 'Bearer '+ jwt})
+for x in range(1, 999) :
+    response = requests.delete("http://localhost:5500/api/character/"+str(x),headers={'Authorization': 'Bearer '+ jwt})
     print(response)
     print(response.headers)
     print(response.text)
     if not response.ok :
-        break;
+        break

@@ -268,7 +268,7 @@ CREATE TABLE `Characters` (
   `JumpSquat` int(11) NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IX_Characters_Name` (`Name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=510 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,7 +296,7 @@ CREATE TABLE `Moves` (
   PRIMARY KEY (`Id`),
   KEY `IX_Moves_CharacterId` (`CharacterId`),
   CONSTRAINT `FK_Moves_Characters_CharacterId` FOREIGN KEY (`CharacterId`) REFERENCES `Characters` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8640 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,15 +321,18 @@ CREATE TABLE `Versions` (
   `Name` longtext CHARACTER SET utf8mb4,
   `Active` longtext CHARACTER SET utf8mb4,
   `Duration` longtext CHARACTER SET utf8mb4,
-  `BaseDamage` float NOT NULL,
+  `BaseDamage` longtext CHARACTER SET utf8mb4,
   `ShieldStun` longtext CHARACTER SET utf8mb4,
   `LandingLag` longtext CHARACTER SET utf8mb4,
   `LandingLagFrames` longtext CHARACTER SET utf8mb4,
   `Comment` longtext CHARACTER SET utf8mb4,
+  `DurationMaxPenalty` longtext CHARACTER SET utf8mb4,
+  `Intangible` longtext CHARACTER SET utf8mb4,
+  `IntangibleMaxPenalty` longtext CHARACTER SET utf8mb4,
   PRIMARY KEY (`Id`),
   KEY `IX_Versions_MoveId` (`MoveId`),
   CONSTRAINT `FK_Versions_Moves_MoveId` FOREIGN KEY (`MoveId`) REFERENCES `Moves` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23438 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -361,7 +364,7 @@ CREATE TABLE `__EFMigrationsHistory` (
 
 LOCK TABLES `__EFMigrationsHistory` WRITE;
 /*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
-INSERT INTO `__EFMigrationsHistory` VALUES ('20191118045439_FreshInit','3.0.0'),('20191118051325_SpecialName','3.0.0');
+INSERT INTO `__EFMigrationsHistory` VALUES ('20191118045439_FreshInit','3.0.0'),('20191118051325_SpecialName','3.0.0'),('20191119021402_dodge-roll-field','3.0.0'),('20191119022629_string-all-fields','3.0.0');
 /*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -374,4 +377,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-17 23:14:00
+-- Dump completed on 2019-11-18 20:27:25
