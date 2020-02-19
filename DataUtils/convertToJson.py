@@ -4,6 +4,7 @@ import xlutils
 from xlutils.copy import copy
 import os
 import pandas as pd
+import re
 from googletrans import Translator
 
 trans = Translator()
@@ -25,19 +26,20 @@ if not os.path.exists("edited_smashdata.xlsx") :
     temp_wb.save("edited_smashdata.xlsx")
 
 wb = xlrd.open_workbook("edited_smashdata.xlsx")
-fighters = wb.sheet_by_index(82)
-abils = wb.sheet_by_index(83)
-attr = wb.sheet_by_index(84)
+fighters = wb.sheet_by_index(83)
+abils = wb.sheet_by_index(84)
+attr = wb.sheet_by_index(85)
 chars = {}
 
 
 
-for row in range(1,fighters.nrows-1) :
+for row in range(1,fighters.nrows) :
+    sheet = re.findall(r'\d+', fighters.cell_value(row, 13))[0]
     name_jp = fighters.cell_value(row, 1).replace('Mr. ', 'Mr.')
     name = fighters.cell_value(row, 2)
     chars[name_jp] = {}
     chars[name_jp]["name"] = name
-    chars[name_jp]["sheet"] = fighters.cell_value(row, 13).replace('Mr. ', 'Mr.')
+    chars[name_jp]["sheet"] = sheet
 
 move_map= {
     "弱攻撃" : "Jab",
@@ -96,7 +98,7 @@ dodge_version_map = {
 }
 
 for name_jp, v in chars.items() :
-    page = wb.sheet_by_name(v["sheet"])
+    page = wb.sheet_by_index(int(v["sheet"]))
     ground_start = 0
     air_start = 0
     special_start = 0
@@ -223,15 +225,9 @@ for name_jp, v in chars.items() :
                 version["durationMaxPenalty"] = page.cell_value(x,5)
             moves["dodges"]["versions"].append(version)
 
-
-
-
-            
-
-
     v["moves"] = moves
-    for key, move in moves.items() :
-        print(v["name"], key + "\n", move)
+    #for key, move in moves.items() :
+        #print(v["name"], key + "\n", move)
     #print(f"ground_start {ground_start}, air_start {air_start}, special_start {special_start}, grab_start {grab_start} ")
 
 for row in range(1, abils.nrows-2) :
@@ -277,11 +273,12 @@ for row in range(1, attr.nrows-2):
     char["ShortHopHeight"] = attr.cell_value(row, 19)
     char["DoubleJumpHeight"] = attr.cell_value(row, 21)
 
+'''
 for k, c in chars.items() :
     print(f"key {k}")
     print(c["name"])
     print(c["initialDash"])
     print(c["moves"])
-
+'''
 with open("characterData.json", 'w') as f :
     f.write(json.dumps(chars, indent=4))
