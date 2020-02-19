@@ -32,22 +32,22 @@ namespace SmashApi
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables("APP_");
             Configuration = builder.Build();
-            
+
         }
 
         internal static IConfiguration Configuration { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) 
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(o =>
             {
-                o.AddDefaultPolicy( builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                });
+                o.AddDefaultPolicy(builder =>
+               {
+                   builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+               });
                 o.AddPolicy("Permissive", builder =>
                 {
                     builder.AllowAnyOrigin()
@@ -59,7 +59,7 @@ namespace SmashApi
                     builder.WithOrigins("https://cade.schlaefl.dev")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials();             
+                        .AllowCredentials();
                 });
             }
             );
@@ -74,11 +74,11 @@ namespace SmashApi
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
-            services.AddAuthentication( options =>
-                {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                }
+            services.AddAuthentication(options =>
+               {
+                   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+               }
                 )
                 .AddJwtBearer(options =>
                 {
@@ -97,7 +97,7 @@ namespace SmashApi
             services.AddControllers().AddNewtonsoftJson();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Smash API", Version = "v1"});
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Smash API", Version = "v1" });
             });
             services.Configure<IdentityOptions>(options =>
             {
@@ -115,52 +115,53 @@ namespace SmashApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Smash API V1");
             });
-            app.UseAuthentication();
-            app.UseAuthorization();
             app.UseStaticFiles();
-            app.UseCors();
 
             app.UseRouting();
-            app.UseEndpoints(endpoints => {
+            app.UseCors();
+            app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllers();
             });
 
             CreateRoles(serviceProvider).Wait();
         }
 
-private async Task CreateRoles(IServiceProvider serviceProvider)
+        private async Task CreateRoles(IServiceProvider serviceProvider)
         {
 
             using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
 
-            //adding custom roles
+                //adding custom roles
 
-            var RoleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+                var RoleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-            var UserManager = serviceScope.ServiceProvider.GetService<UserManager<IdentityUser>>();
+                var UserManager = serviceScope.ServiceProvider.GetService<UserManager<IdentityUser>>();
 
-            string[] roleNames = {"Admin"};
+                string[] roleNames = { "Admin" };
 
-            IdentityResult roleResult;
+                IdentityResult roleResult;
 
-            foreach (var roleName in roleNames)
-            {
-                //creating the roles and seeding them to the database
-                var roleExist = await RoleManager.RoleExistsAsync(roleName);
-
-                if (!roleExist)
+                foreach (var roleName in roleNames)
                 {
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                    //creating the roles and seeding them to the database
+                    var roleExist = await RoleManager.RoleExistsAsync(roleName);
+
+                    if (!roleExist)
+                    {
+                        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                    }
                 }
-            }
 
 
             }
