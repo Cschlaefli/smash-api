@@ -46,9 +46,9 @@ namespace SmashApi.Controllers
                 var user = await _userManager.FindByEmailAsync(login.Username);
                 var roles = await _userManager.GetRolesAsync(user);
                 var claims = new List<Claim>();
-                foreach(String role in roles)
+                foreach (String role in roles)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, role));                    
+                    claims.Add(new Claim(ClaimTypes.Role, role));
                 }
                 var tokenString = BuildToken(claims.ToArray());
                 response = Ok(new { token = tokenString });
@@ -65,29 +65,30 @@ namespace SmashApi.Controllers
             var user = new IdentityUser { UserName = login.Username, Email = login.Username };
             var result = await _userManager.CreateAsync(user, login.Password);
             IActionResult response = BadRequest(result.Errors);
-            if (result.Succeeded){
+            if (result.Succeeded)
+            {
                 response = Ok($"{login.Username} registered");
             }
             return response;
         }
 
-        [Authorize]
         [HttpPost]
         [Route("roles")]
         public async Task<IActionResult> AddRole([FromBody]RoleLoginModel login)
         {
 
             var result = await _signInManager.PasswordSignInAsync(login.Username, login.Password, false, lockoutOnFailure: true);
-            string role = _config["adminCode"].ToLower() == login.Code.ToLower() ?  "Admin" : "";
+            string role = _config["adminCode"].ToLower() == login.Code.ToLower() ? "Admin" : "";
             IActionResult response = Unauthorized("Invalid login");
 
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(login.Username);
-                if(!String.IsNullOrEmpty(role))
+                if (!String.IsNullOrEmpty(role))
                 {
                     var changeRoleResult = await _userManager.AddToRoleAsync(user, role);
-                    if( changeRoleResult.Succeeded ){
+                    if (changeRoleResult.Succeeded)
+                    {
                         response = Ok($" user {user.Email} is now {role}");
                     }
                     else
@@ -110,7 +111,7 @@ namespace SmashApi.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(_config["JwtIssuer"],
-                _config["JwtIssuer"],                
+                _config["JwtIssuer"],
                 claim,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
@@ -118,7 +119,7 @@ namespace SmashApi.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        
+
         public class LoginModel
         {
             public string Username { get; set; }
@@ -126,10 +127,10 @@ namespace SmashApi.Controllers
         }
         public class RoleLoginModel : LoginModel
         {
-            public string Code { get; set;}
+            public string Code { get; set; }
         }
 
 
     }
-    
+
 }

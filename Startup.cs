@@ -125,9 +125,9 @@ namespace SmashApi
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseCors();
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseCors();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

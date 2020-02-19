@@ -25,6 +25,7 @@ for info in characters.values():
     response = requests.post(url +"/api/character", json=info, headers={'Authorization': 'Bearer '+ jwt})
     print(response.headers)
     print(response.text)
+    print(response)
     if not response.ok :
         break
 

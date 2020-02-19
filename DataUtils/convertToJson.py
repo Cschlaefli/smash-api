@@ -37,6 +37,7 @@ for row in range(1,fighters.nrows) :
     sheet = re.findall(r'\d+', fighters.cell_value(row, 13))[0]
     name_jp = fighters.cell_value(row, 1).replace('Mr. ', 'Mr.')
     name = fighters.cell_value(row, 2)
+    if name == "" : name = "BYLETH"
     chars[name_jp] = {}
     chars[name_jp]["name"] = name
     chars[name_jp]["sheet"] = sheet
@@ -230,8 +231,11 @@ for name_jp, v in chars.items() :
         #print(v["name"], key + "\n", move)
     #print(f"ground_start {ground_start}, air_start {air_start}, special_start {special_start}, grab_start {grab_start} ")
 
-for row in range(1, abils.nrows-2) :
-    char = chars[abils.cell_value(row, 1)]
+for row in range(1, abils.nrows-1) :
+    name = abils.cell_value(row,1)
+    if name == "ベレト／ベレス" :
+        name = "ベレト"
+    char = chars[name]
     char["jumps"] = abils.cell_value(row,2)
     char["crawl"] = abils.cell_value(row,3)
     if abils.cell_value(row,3) == "" :
@@ -260,8 +264,11 @@ for row in range(1, abils.nrows-2) :
     char["FallSpeed"] = abils.cell_value(row,27)
     char["FastFallSpeed"] = abils.cell_value(row,29)
 
-for row in range(1, attr.nrows-2):
-    char = chars[attr.cell_value(row, 1)]
+for row in range(1, attr.nrows-1):
+    name = attr.cell_value(row,1)
+    if name == "ベレト／ベレス" :
+        name = "ベレト"
+    char = chars[name]
     char["initialDash"] = attr.cell_value(row, 3)
     char["acceleration"] = attr.cell_value(row, 5)
     char["friction"] = attr.cell_value(row, 7)

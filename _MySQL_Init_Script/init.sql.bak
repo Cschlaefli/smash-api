@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.21-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.17-MariaDB, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: 
+-- Host: 127.0.0.1    Database: accountowner
 -- ------------------------------------------------------
--- Server version	5.7.29
+-- Server version	5.7.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,6 +42,15 @@ CREATE TABLE `AspNetRoleClaims` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `AspNetRoleClaims`
+--
+
+LOCK TABLES `AspNetRoleClaims` WRITE;
+/*!40000 ALTER TABLE `AspNetRoleClaims` DISABLE KEYS */;
+/*!40000 ALTER TABLE `AspNetRoleClaims` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `AspNetRoles`
 --
 
@@ -57,6 +66,16 @@ CREATE TABLE `AspNetRoles` (
   UNIQUE KEY `RoleNameIndex` (`NormalizedName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `AspNetRoles`
+--
+
+LOCK TABLES `AspNetRoles` WRITE;
+/*!40000 ALTER TABLE `AspNetRoles` DISABLE KEYS */;
+INSERT INTO `AspNetRoles` VALUES ('3fc548e2-d598-43f8-bdad-989183b61e23','Admin','ADMIN','ecaee257-c42d-461a-8ddb-c150ba0ed7fc');
+/*!40000 ALTER TABLE `AspNetRoles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `AspNetUserClaims`
@@ -77,6 +96,15 @@ CREATE TABLE `AspNetUserClaims` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `AspNetUserClaims`
+--
+
+LOCK TABLES `AspNetUserClaims` WRITE;
+/*!40000 ALTER TABLE `AspNetUserClaims` DISABLE KEYS */;
+/*!40000 ALTER TABLE `AspNetUserClaims` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `AspNetUserLogins`
 --
 
@@ -93,6 +121,15 @@ CREATE TABLE `AspNetUserLogins` (
   CONSTRAINT `FK_AspNetUserLogins_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `AspNetUserLogins`
+--
+
+LOCK TABLES `AspNetUserLogins` WRITE;
+/*!40000 ALTER TABLE `AspNetUserLogins` DISABLE KEYS */;
+/*!40000 ALTER TABLE `AspNetUserLogins` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `AspNetUserRoles`
@@ -112,6 +149,16 @@ CREATE TABLE `AspNetUserRoles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `AspNetUserRoles`
+--
+
+LOCK TABLES `AspNetUserRoles` WRITE;
+/*!40000 ALTER TABLE `AspNetUserRoles` DISABLE KEYS */;
+INSERT INTO `AspNetUserRoles` VALUES ('e1f8dfb6-d055-4e03-9c77-66d8357f0c0d','3fc548e2-d598-43f8-bdad-989183b61e23');
+/*!40000 ALTER TABLE `AspNetUserRoles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `AspNetUserTokens`
 --
 
@@ -127,6 +174,15 @@ CREATE TABLE `AspNetUserTokens` (
   CONSTRAINT `FK_AspNetUserTokens_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `AspNetUserTokens`
+--
+
+LOCK TABLES `AspNetUserTokens` WRITE;
+/*!40000 ALTER TABLE `AspNetUserTokens` DISABLE KEYS */;
+/*!40000 ALTER TABLE `AspNetUserTokens` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `AspNetUsers`
@@ -156,6 +212,16 @@ CREATE TABLE `AspNetUsers` (
   KEY `EmailIndex` (`NormalizedEmail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `AspNetUsers`
+--
+
+LOCK TABLES `AspNetUsers` WRITE;
+/*!40000 ALTER TABLE `AspNetUsers` DISABLE KEYS */;
+INSERT INTO `AspNetUsers` VALUES ('e1f8dfb6-d055-4e03-9c77-66d8357f0c0d','string','STRING','string','STRING',0,'AQAAAAEAACcQAAAAEC11KfnLKUhlzAcjzF7LeaZZ61l8LyDT5twX9Ldc0z3+v2sAS08Y54XjtI+LjBLmMA==','DMVBEUR4BFCQFO2X7SPREGX2Z4NPJW4D','1b1c1ad9-608e-4b36-b073-15be7aabeb90',NULL,0,0,NULL,1,0);
+/*!40000 ALTER TABLE `AspNetUsers` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `Characters`
@@ -202,8 +268,17 @@ CREATE TABLE `Characters` (
   `JumpSquat` int(11) NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IX_Characters_Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=510 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Characters`
+--
+
+LOCK TABLES `Characters` WRITE;
+/*!40000 ALTER TABLE `Characters` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Characters` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `Moves`
@@ -218,12 +293,20 @@ CREATE TABLE `Moves` (
   `Name` longtext CHARACTER SET utf8mb4,
   `NameJp` longtext CHARACTER SET utf8mb4,
   `SpecialName` longtext CHARACTER SET utf8mb4,
-  `Type` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `IX_Moves_CharacterId` (`CharacterId`),
   CONSTRAINT `FK_Moves_Characters_CharacterId` FOREIGN KEY (`CharacterId`) REFERENCES `Characters` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5650 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8640 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Moves`
+--
+
+LOCK TABLES `Moves` WRITE;
+/*!40000 ALTER TABLE `Moves` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Moves` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `Versions`
@@ -249,8 +332,17 @@ CREATE TABLE `Versions` (
   PRIMARY KEY (`Id`),
   KEY `IX_Versions_MoveId` (`MoveId`),
   CONSTRAINT `FK_Versions_Moves_MoveId` FOREIGN KEY (`MoveId`) REFERENCES `Moves` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15457 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23438 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Versions`
+--
+
+LOCK TABLES `Versions` WRITE;
+/*!40000 ALTER TABLE `Versions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Versions` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `__EFMigrationsHistory`
@@ -265,6 +357,16 @@ CREATE TABLE `__EFMigrationsHistory` (
   PRIMARY KEY (`MigrationId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `__EFMigrationsHistory`
+--
+
+LOCK TABLES `__EFMigrationsHistory` WRITE;
+/*!40000 ALTER TABLE `__EFMigrationsHistory` DISABLE KEYS */;
+INSERT INTO `__EFMigrationsHistory` VALUES ('20191118045439_FreshInit','3.0.0'),('20191118051325_SpecialName','3.0.0'),('20191119021402_dodge-roll-field','3.0.0'),('20191119022629_string-all-fields','3.0.0');
+/*!40000 ALTER TABLE `__EFMigrationsHistory` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -275,4 +377,4 @@ CREATE TABLE `__EFMigrationsHistory` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-19 15:13:09
+-- Dump completed on 2019-11-18 20:27:25

@@ -7,7 +7,7 @@ with open("jwt.key", 'r') as f :
     key = json.loads(f.read())
 jwt = key["token"]
 
-response = requests.post("http://localhost:5000/api/auth/roles", json="{'username':'test','password':'testtest','code':'nice try fbi'}",headers={'Authorization': 'Bearer '+ jwt})
+response = requests.post("http://localhost:5500/api/auth/roles", json="{'username':'string','password':'stringstring','code':'nice try fbi'}",headers={'Authorization': 'Bearer '+ jwt})
 print(response)
 print(response.headers)
 print(response.text)

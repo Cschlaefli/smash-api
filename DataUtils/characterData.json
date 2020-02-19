@@ -56278,7 +56278,7 @@
         "DoubleJumpHeight": 29.0
     },
     "\u30d9\u30ec\u30c8": {
-        "name": "Byleth",
+        "name": "BYLETH",
         "sheet": "75",
         "moves": {
             "Jab": {
@@ -56978,6 +56978,35 @@
                     }
                 ]
             }
-        }
+        },
+        "jumps": "2",
+        "crawl": 0,
+        "wallJump": 0,
+        "wallCling": 0,
+        "zair": 0,
+        "jumpSquat": 3,
+        "softLanding": 2,
+        "hardLanding": 4,
+        "fullDashFrames": 19,
+        "ShortHop": 35.0,
+        "FullHop": 45.0,
+        "ShortHopFastFall": 24.0,
+        "FullHopFastFall": 31.0,
+        "Weight": 97,
+        "WalkSpeed": 0.78,
+        "RunSpeed": 1.43,
+        "AirSpeed": 0.89,
+        "FallSpeed": 1.6,
+        "FastFallSpeed": 2.56,
+        "initialDash": 1.8,
+        "acceleration": 0.15,
+        "friction": 0.125,
+        "AirAcceleration": 0.053,
+        "AirFriction": 0.008,
+        "Gravity": 0.089,
+        "FullHopInitialSpeed": 14.575,
+        "FullHopHeight": 26.5,
+        "ShortHopHeight": 14.0,
+        "DoubleJumpHeight": 28.5
     }
 }
