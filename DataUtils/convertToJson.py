@@ -34,7 +34,9 @@ chars = {}
 
 
 for row in range(1,fighters.nrows) :
-    sheet = re.findall(r'\d+', fighters.cell_value(row, 13))[0]
+    sheet = fighters.cell_value(row, 13).replace('Mr. ', 'Mr.')
+    if sheet == "75. ベレト" :
+        sheet = "75. ベレト／ベレス"
     name_jp = fighters.cell_value(row, 1).replace('Mr. ', 'Mr.')
     name = fighters.cell_value(row, 2)
     if name == "" : name = "BYLETH"
@@ -99,7 +101,7 @@ dodge_version_map = {
 }
 
 for name_jp, v in chars.items() :
-    page = wb.sheet_by_index(int(v["sheet"]))
+    page = wb.sheet_by_name(v["sheet"])
     ground_start = 0
     air_start = 0
     special_start = 0

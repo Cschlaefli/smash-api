@@ -16,27 +16,29 @@ namespace SmashApi.Controllers
     public class CharacterController : ControllerBase
     {
         private readonly CharacterContext _context;
-        public CharacterController(CharacterContext context){
+        public CharacterController(CharacterContext context)
+        {
             _context = context;
         }
 
         [HttpGet]
-        [EnableCors]
+        [EnableCors("Permissive")]
         public async Task<ActionResult<IEnumerable<Character>>> GetCharacters()
         {
             return await _context.Characters.ToListAsync();
         }
         [HttpGet("{id}")]
-        [EnableCors]
+        [EnableCors("Permissive")]
         public async Task<ActionResult<Character>> GetCharacter(int id)
         {
             var character = await _context.Characters.FindAsync(id);
-            if(character == null)
+            if (character == null)
                 return NotFound();
             await _context.Entry(character)
                 .Collection(c => c.Moves)
                 .LoadAsync();
-            foreach (Move m in character.Moves){
+            foreach (Move m in character.Moves)
+            {
                 await _context.Entry(m)
                     .Collection(c => c.Versions)
                     .LoadAsync();
@@ -50,16 +52,16 @@ namespace SmashApi.Controllers
         {
             _context.Characters.Add(character);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetCharacter), new {id = character.Id}, character);
+            return CreatedAtAction(nameof(GetCharacter), new { id = character.Id }, character);
         }
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [EnableCors("Enforcing")]
         public async Task<IActionResult> PutCharacter(int id, Character character)
         {
-            if(id != character.Id)
+            if (id != character.Id)
                 return BadRequest();
-            
+
             _context.Entry(character).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
@@ -72,7 +74,7 @@ namespace SmashApi.Controllers
         {
 
             var character = await _context.Characters.FindAsync(id);
-            if(character == null )
+            if (character == null)
                 return NotFound();
             _context.Characters.Remove(character);
             await _context.SaveChangesAsync();
